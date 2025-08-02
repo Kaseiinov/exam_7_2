@@ -5,12 +5,14 @@ import kg.attractor.exam_7.dao.CurrencyDao;
 import kg.attractor.exam_7.dao.UserDao;
 import kg.attractor.exam_7.dto.AccountDto;
 import kg.attractor.exam_7.dto.CreateAccDto;
+import kg.attractor.exam_7.dto.HistoryDto;
 import kg.attractor.exam_7.dto.TopUpDto;
 import kg.attractor.exam_7.exceptions.CurrencyNotFoundException;
 import kg.attractor.exam_7.exceptions.UserNotFoundException;
 import kg.attractor.exam_7.exceptions.WrongUserException;
 import kg.attractor.exam_7.model.Account;
 import kg.attractor.exam_7.model.Currency;
+import kg.attractor.exam_7.model.History;
 import kg.attractor.exam_7.model.User;
 import kg.attractor.exam_7.service.AccountService;
 import lombok.RequiredArgsConstructor;
@@ -29,6 +31,8 @@ public class AccountServiceImpl implements AccountService {
     private final AccountDao accountDao;
     private final UserDao userDao;
     private final CurrencyDao currencyDao;
+
+
 
     @Override
     public List<AccountDto> getAccounts(){

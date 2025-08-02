@@ -3,9 +3,11 @@ package kg.attractor.exam_7.controller;
 import jakarta.validation.Valid;
 import kg.attractor.exam_7.dto.AccountDto;
 import kg.attractor.exam_7.dto.CreateAccDto;
+import kg.attractor.exam_7.dto.HistoryDto;
 import kg.attractor.exam_7.dto.TopUpDto;
 import kg.attractor.exam_7.exceptions.WrongUserException;
 import kg.attractor.exam_7.service.AccountService;
+import kg.attractor.exam_7.service.HistoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +22,12 @@ import java.util.List;
 @RequiredArgsConstructor
 public class AccountController {
     private final AccountService accountService;
+    private final HistoryService historyService;
+
+    @GetMapping("/transactions/{accountNumber}/history")
+    public List<HistoryDto> getHistoriesByAccNum(@PathVariable String accountNumber){
+        return historyService.getHistoriesByAccNum(accountNumber);
+    }
 
     @GetMapping
     public ResponseEntity<List<AccountDto>> getAccounts() {
