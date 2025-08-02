@@ -14,6 +14,11 @@ import java.util.List;
 public class AdminController {
     private final TransactionService transactionService;
 
+    @PostMapping("transactions/rollback")
+    public void rollBack(@RequestParam Long id) {
+        transactionService.approveTransaction(id);
+    }
+
     @PostMapping("transactions/approval")
     public void approveTransactionById(@RequestParam Long id) {
         transactionService.approveTransaction(id);

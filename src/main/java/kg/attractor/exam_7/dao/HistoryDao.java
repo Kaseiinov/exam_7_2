@@ -2,6 +2,7 @@ package kg.attractor.exam_7.dao;
 
 import kg.attractor.exam_7.mapper.HistoryMapper;
 import kg.attractor.exam_7.model.History;
+import kg.attractor.exam_7.model.RollBack;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -16,6 +17,25 @@ import java.util.Optional;
 public class HistoryDao {
     private final JdbcTemplate jdbcTemplate;
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+
+    public void saveRollBack(RollBack rollBack) {
+        String sql = "insert into ROLLBACKS(from_acc, to_acc, amount_money, SUCCESSFUL, ENABLED) " +
+                "values (:fromAcc, :toAcc, :amountMoney, :successful, enabled)";
+
+        namedParameterJdbcTemplate.update(sql,
+                new MapSqlParameterSource()
+                        .addValue("fromAcc", rollBack.getFromAcc())
+                        .addValue("toAcc", rollBack.getToAcc())
+                        .addValue("amountMoney", rollBack.getAmountMoney())
+                        .addValue("successful", rollBack.getSuccessful())
+                        .addValue("enabled", rollBack.getEnabled())
+        );
+    }
+
+    public Optional<History> getTrueHistoryById(Long id){
+        String sql = "select * from history where id = ? and APPROVED = true";
+        return Optional.ofNullable(jdbcTemplate.queryForObject(sql, new HistoryMapper(), id));
+    }
 
     public Optional<History> getHistoryById(Long id){
         String sql = "select * from history where id = ?";

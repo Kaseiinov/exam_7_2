@@ -6,10 +6,7 @@ import kg.attractor.exam_7.dao.HistoryDao;
 import kg.attractor.exam_7.dao.UserDao;
 import kg.attractor.exam_7.dto.*;
 import kg.attractor.exam_7.exceptions.*;
-import kg.attractor.exam_7.model.Account;
-import kg.attractor.exam_7.model.Currency;
-import kg.attractor.exam_7.model.History;
-import kg.attractor.exam_7.model.User;
+import kg.attractor.exam_7.model.*;
 import kg.attractor.exam_7.service.AccountService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,6 +25,32 @@ public class AccountServiceImpl implements AccountService {
     private final UserDao userDao;
     private final CurrencyDao currencyDao;
     private final HistoryDao historyDao;
+
+    @Override
+    public void makeTransaction(TransactionDto transactionDto) throws InvalidCurrencyException, NotEnoughFundsOnAccountException, NotAccaptableException {
+        Account fromAcc = accountDao.getAccountByNum(transactionDto.getFromAcc()).orElseThrow(NotFoundException::new);
+        Account toAcc = accountDao.getAccountByNum(transactionDto.getToAcc()).orElseThrow(NotFoundException::new);
+        boolean isEnough = accountDao.isEnough(fromAcc.getUniqNumber(), transactionDto.getAmount());
+
+        if(!fromAcc.getCurrencyId().equals(toAcc.getCurrencyId())) {
+            throw new InvalidCurrencyException();
+        }
+
+        if(!isEnough) {
+            throw new NotAccaptableException();
+        }
+
+        RollBack rollBack = new RollBack();
+        rollBack.setFromAcc(fromAcc.getUniqNumber());
+        rollBack.setToAcc(toAcc.getUniqNumber());
+        rollBack.setAmountMoney(transactionDto.getAmount());
+        rollBack.setEnabled(true);
+        rollBack.setSuccessful(true);
+        historyDao.saveRollBack(rollBack);
+        accountDao.makeTransaction(fromAcc.getUniqNumber(), toAcc.getUniqNumber(), transactionDto.getAmount());
+
+
+    }
 
     @Override
     public void makeTransaction(TransactionDto transactionDto, Authentication auth) throws InvalidCurrencyException, NotEnoughFundsOnAccountException {
