@@ -14,10 +14,7 @@ public class UserDto {
     @NotBlank
     private String username;
     @NotBlank
-    @Pattern(
-            regexp = "^\\(996\\) \\d{3}-\\d{2}-\\d{2}$",
-            message = "Invalid phone format. Use: (996) XXX-XX-XX"
-    )
+    @Size(min = 12, max = 12)
     private String phone;
 
     @NotBlank

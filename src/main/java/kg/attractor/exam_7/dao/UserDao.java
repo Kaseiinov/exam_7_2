@@ -16,6 +16,11 @@ public class UserDao {
     private final JdbcTemplate jdbcTemplate;
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
+    public Optional<User> findByPhone(String phone) {
+        String sql = "select * from users where phone = ?";
+        return Optional.ofNullable(jdbcTemplate.queryForObject(sql, new UserMapper(), phone));
+    }
+
     public void register(User user) {
         String sql = "insert into users(phone, username, password, role_id, enabled)" +
                 " values(:phone, :username, :password, :roleId, :enabled);";

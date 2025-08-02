@@ -40,5 +40,10 @@ public class GlobalControllerAdvice {
     public ErrorResponse nullExceptionHandler (NullPointerException ex){
         return ErrorResponse.builder(ex, HttpStatus.NOT_FOUND, ex.getMessage()).build();
     }
+
+    @ExceptionHandler(Exception.class)
+    public ErrorResponse ExceptionHandler (Exception ex){
+        return ErrorResponse.builder(ex, HttpStatus.BAD_REQUEST, ex.getMessage()).build();
+    }
 }
 

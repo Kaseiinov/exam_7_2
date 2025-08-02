@@ -6,6 +6,7 @@ import kg.attractor.exam_7.model.User;
 import kg.attractor.exam_7.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -13,13 +14,14 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class UserServiceImpl  implements UserService {
     private final UserDao userDao;
+    private final PasswordEncoder encoder;
 
     @Override
     public void register(UserDto userDto){
         User user = User
                 .builder()
                 .phone(userDto.getPhone())
-                .password(userDto.getPassword())
+                .password(encoder.encode(userDto.getPassword()))
                 .username(userDto.getUsername())
                 .roleId(1L)
                 .enabled(true)

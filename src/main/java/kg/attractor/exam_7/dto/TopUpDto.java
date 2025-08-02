@@ -11,9 +11,9 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class CreateAcc {
-    @NotNull
-    private Long userId;
+public class TopUpDto {
     @NotBlank
-    private String currency;
+    private String accNumber;
+    @NotNull
+    private Double balance;
 }

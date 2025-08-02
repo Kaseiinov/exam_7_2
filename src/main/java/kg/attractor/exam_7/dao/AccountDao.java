@@ -18,6 +18,37 @@ public class AccountDao {
     private final JdbcTemplate jdbcTemplate;
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
+    public boolean isAccountOwnedByUser(String accountNumber, String userPhone) {
+        String sql = """
+            SELECT EXISTS (
+                SELECT 1 
+                FROM accounts a
+                JOIN users u ON a.user_id = u.id
+                WHERE a.uniq_number = ?
+                AND u.phone = ?
+            )
+            """;
+
+        return Boolean.TRUE.equals(
+                jdbcTemplate.queryForObject(sql, Boolean.class, accountNumber, userPhone)
+        );
+    }
+
+    public void toUp(Long userId, String accNum, Double amount) {
+        String sql = "UPDATE accounts \n" +
+                "SET balance = balance + :amount\n" +
+                "WHERE user_id = :userId " +
+                "and uniq_number = :accNum;";
+
+        namedParameterJdbcTemplate.update(sql,
+                new MapSqlParameterSource()
+                        .addValue("userId", userId)
+                        .addValue("accNum", accNum)
+                        .addValue("amount", amount)
+
+        );
+    }
+
     public Optional<Double> getBalanceByNum(String accNum) {
         String sql = "SELECT balance FROM accounts WHERE uniq_number = :accNum";
         Map<String, Object> params = Collections.singletonMap("accNum", accNum);
