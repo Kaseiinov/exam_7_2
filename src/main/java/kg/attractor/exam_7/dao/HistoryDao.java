@@ -17,6 +17,11 @@ public class HistoryDao {
     private final JdbcTemplate jdbcTemplate;
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
+    public List<History> getTransactionHistory() {
+        String sql = "select * from history";
+        return jdbcTemplate.query(sql, new HistoryMapper());
+    }
+
     public void save(History history) {
         String sql = "insert into history(from_acc, to_acc, amount_money, approved) " +
                 "values (:fromAcc, :toAcc, :amountMoney, :approved)";

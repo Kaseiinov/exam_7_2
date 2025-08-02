@@ -23,16 +23,7 @@ public class AccountController {
     private final AccountService accountService;
     private final HistoryService historyService;
 
-    @PostMapping("transactions")
-    public void makeTransaction(@RequestBody @Valid TransactionDto transactionDto) throws NotEnoughFundsOnAccountException, InvalidCurrencyException {
-        accountService.makeTransaction(transactionDto);
 
-    }
-
-    @GetMapping("/transactions/{accountNumber}/history")
-    public List<HistoryDto> getHistoriesByAccNum(@PathVariable String accountNumber){
-        return historyService.getHistoriesByAccNum(accountNumber);
-    }
 
     @GetMapping
     public ResponseEntity<List<AccountDto>> getAccounts() {
