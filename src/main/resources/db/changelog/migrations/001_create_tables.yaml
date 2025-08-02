@@ -1,0 +1,211 @@
+databaseChangeLog:
+  - changeSet:
+      id: Create unessacary tables
+      author: Kaseiinov_I
+      changes:
+        - createTable:
+            tableName: authorities
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+              - column:
+                  name: authority
+                  type: varchar(55)
+                  constraints:
+                    nullable: false
+
+        - createTable:
+            tableName: roles
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+              - column:
+                  name: role_name
+                  type: varchar(55)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: authority_id
+                  type: boolean
+                  constraints:
+                    foreignKeyName: fk_authority_id_authorities
+                    referencedColumnNames: authorities(id)
+
+
+        - createTable:
+            tableName: users
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+              - column:
+                  name: phone
+                  type: varchar(55)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: username
+                  type: varchar(55)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: password
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: role_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_role_id_users
+                    referencedColumnNames: roles(id)
+              - column:
+                  name: enabled
+                  type: boolean
+                  defaultValueBoolean: true
+
+        - createTable:
+            tableName: currencies
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+              - column:
+                  name: currency
+                  type: varchar(55)
+                  constraints:
+                    nullable: false
+
+        - createTable:
+            tableName: accounts
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+              - column:
+                  name: currency_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_currency_id_currencies
+                    referencedColumnNames: currencies(id)
+              - column:
+                  name: user_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_user_id_accounts
+                    referencedColumnNames: users(id)
+              - column:
+                  name: balance
+                  type: double
+                  defaultValueNumeric: 0.0
+                  constraints:
+                    nullable: false
+              - column:
+                  name: uniq_number
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+                    unique: true
+
+        - createTable:
+            tableName: history
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+              - column:
+                  name: from_acc
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_from_acc_history
+                    referencedColumnNames: accounts(uniq_number)
+              - column:
+                  name: to_acc
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_to_acc_history
+                    referencedColumnNames: accounts(uniq_number)
+              - column:
+                  name: amount_money
+                  type: double
+                  constraints:
+                    nullable: false
+              - column:
+                  name: approved
+                  type: boolean
+                  constraints:
+                    nullable: false
+
+        - createTable:
+            tableName: rollbacks
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+              - column:
+                  name: from_acc
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_from_acc_rollback
+                    referencedColumnNames: accounts(uniq_number)
+              - column:
+                  name: to_acc
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_to_acc_rollback
+                    referencedColumnNames: accounts(uniq_number)
+              - column:
+                  name: amount_money
+                  type: double
+                  constraints:
+                    nullable: false
+              - column:
+                  name: successful
+                  type: boolean
+                  constraints:
+                    nullable: false
+              - column:
+                  name: enabled
+                  type: boolean
+                  defaultValueBoolean: true
+                  constraints:
+                    nullable: false
+
+

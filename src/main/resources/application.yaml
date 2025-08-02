@@ -1,0 +1,24 @@
+spring:
+  application:
+    name: "Exam_7"
+
+  #====================== DataBase ========================
+
+  datasource:
+    url: jdbc:h2:./db/Exam_7_2DB;AUTO_SERVER=TRUE
+    username: isu
+    password: qwe
+    driver-class-name: org.h2.Driver
+  liquibase:
+    change-log: classpath:/db/changelog/master.yaml
+    enabled: true
+
+#====================== DataBase ========================
+
+logging:
+  level:
+    root: info
+  pattern:
+    file: '%d{yyyy-MM-dd HH:mm:ss} %-5level %logger{36} - %msg%n'
+  file:
+    path: logs
