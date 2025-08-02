@@ -9,20 +9,23 @@ import kg.attractor.exam_7.exceptions.UserNotFoundException;
 import kg.attractor.exam_7.model.Account;
 import kg.attractor.exam_7.model.Currency;
 import kg.attractor.exam_7.model.User;
+import kg.attractor.exam_7.service.AccountService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.rmi.NotBoundException;
 import java.util.UUID;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class AccountService {
+public abstract class AccountServiceImpl implements AccountService {
     private final AccountDao accountDao;
     private final UserDao userDao;
     private final CurrencyDao currencyDao;
 
+    @Override
     public void createAcc(CreateAcc createAcc) {
         User user = userDao.findById(createAcc.getUserId()).orElseThrow(UserNotFoundException::new);
         Currency currency = currencyDao.findById(createAcc.getCurrency()).orElseThrow(CurrencyNotFoundException::new);
@@ -38,4 +41,10 @@ public class AccountService {
         accountDao.createAcc(acc);
         log.info("Created account {}", acc.getUniqNumber());
     }
+
+    @Override
+    public Double getBalance(String accNum) throws NotBoundException {
+        return accountDao.getBalanceByNum(accNum).orElseThrow(NotBoundException::new);
+    }
+
 }

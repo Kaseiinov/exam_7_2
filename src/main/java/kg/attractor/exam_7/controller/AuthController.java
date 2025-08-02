@@ -2,6 +2,7 @@ package kg.attractor.exam_7.controller;
 
 import jakarta.validation.Valid;
 import kg.attractor.exam_7.dto.UserDto;
+import kg.attractor.exam_7.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PostMapping;
