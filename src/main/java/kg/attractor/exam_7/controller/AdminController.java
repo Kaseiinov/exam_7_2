@@ -2,6 +2,9 @@ package kg.attractor.exam_7.controller;
 
 import kg.attractor.exam_7.dto.HistoryDto;
 import kg.attractor.exam_7.dto.TransactionDto;
+import kg.attractor.exam_7.exceptions.InvalidCurrencyException;
+import kg.attractor.exam_7.exceptions.NotAccaptableException;
+import kg.attractor.exam_7.exceptions.NotEnoughFundsOnAccountException;
 import kg.attractor.exam_7.service.TransactionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -15,8 +18,8 @@ public class AdminController {
     private final TransactionService transactionService;
 
     @PostMapping("transactions/rollback")
-    public void rollBack(@RequestParam Long id) {
-        transactionService.approveTransaction(id);
+    public void rollBack(@RequestParam Long id) throws NotEnoughFundsOnAccountException, NotAccaptableException, InvalidCurrencyException {
+        transactionService.rollBack(id);
     }
 
     @PostMapping("transactions/approval")

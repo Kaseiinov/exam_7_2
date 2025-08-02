@@ -47,7 +47,7 @@ public class AccountServiceImpl implements AccountService {
         rollBack.setEnabled(true);
         rollBack.setSuccessful(true);
         historyDao.saveRollBack(rollBack);
-        accountDao.makeTransaction(fromAcc.getUniqNumber(), toAcc.getUniqNumber(), transactionDto.getAmount());
+        accountDao.makeTransactionRoll(fromAcc.getUniqNumber(), toAcc.getUniqNumber(), transactionDto.getAmount());
 
 
     }
@@ -118,8 +118,8 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public void createAcc(CreateAccDto createAcc) {
-        User user = userDao.findById(createAcc.getUserId()).orElseThrow(UserNotFoundException::new);
+    public void createAcc(CreateAccDto createAcc, Authentication auth) {
+        User user = userDao.findByPhone(auth.getName()).orElseThrow(UserNotFoundException::new);
         Currency currency = currencyDao.findById(createAcc.getCurrency()).orElseThrow(CurrencyNotFoundException::new);
         String uuidFile = UUID.randomUUID().toString();
         String resultFileName = uuidFile + "_" + user.getPhone();

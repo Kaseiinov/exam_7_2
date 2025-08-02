@@ -20,7 +20,7 @@ public class HistoryDao {
 
     public void saveRollBack(RollBack rollBack) {
         String sql = "insert into ROLLBACKS(from_acc, to_acc, amount_money, SUCCESSFUL, ENABLED) " +
-                "values (:fromAcc, :toAcc, :amountMoney, :successful, enabled)";
+                "values (:fromAcc, :toAcc, :amountMoney, :successful, :enabled)";
 
         namedParameterJdbcTemplate.update(sql,
                 new MapSqlParameterSource()

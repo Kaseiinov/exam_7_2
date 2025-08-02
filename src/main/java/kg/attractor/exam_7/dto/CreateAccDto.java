@@ -12,8 +12,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CreateAccDto {
-    @NotNull
-    private Long userId;
     @NotBlank
     private String currency;
 }

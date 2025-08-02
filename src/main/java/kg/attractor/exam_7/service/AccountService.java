@@ -22,7 +22,7 @@ public interface AccountService {
 
     void toUp(Authentication authentication, TopUpDto topUp) throws WrongUserException;
 
-    void createAcc(CreateAccDto createAcc);
+    void createAcc(CreateAccDto createAcc, Authentication auth);
 
     Double getBalance(String accNum) throws NotBoundException;
 }

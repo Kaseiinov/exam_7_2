@@ -37,8 +37,8 @@ public class AccountController {
     }
 
     @PostMapping
-    public HttpStatus createAcc(@RequestBody CreateAccDto createAcc) {
-        accountService.createAcc(createAcc);
+    public HttpStatus createAcc(@RequestBody CreateAccDto createAcc, Authentication auth) {
+        accountService.createAcc(createAcc, auth);
         return HttpStatus.CREATED;
     }
 

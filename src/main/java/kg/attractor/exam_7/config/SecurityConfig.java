@@ -46,6 +46,7 @@ public class SecurityConfig {
                 .logout(AbstractHttpConfigurer::disable)
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorize -> authorize
+                        .requestMatchers(HttpMethod.POST, "/api/accounts").authenticated()
                         .requestMatchers(HttpMethod.POST, "/api/accounts/balance").authenticated()
                         .requestMatchers(HttpMethod.POST, "/api/accounts/transactions").authenticated()
                         .requestMatchers(HttpMethod.POST, "/api/transactions").authenticated()

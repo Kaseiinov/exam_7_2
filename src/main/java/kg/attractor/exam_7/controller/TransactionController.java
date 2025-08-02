@@ -26,7 +26,7 @@ public class TransactionController {
 
     }
 
-    @GetMapping("/transactions/{accountNumber}/history")
+    @GetMapping("/{accountNumber}/history")
     public List<HistoryDto> getHistoriesByAccNum(@PathVariable String accountNumber){
         return historyService.getHistoriesByAccNum(accountNumber);
     }

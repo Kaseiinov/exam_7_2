@@ -17,6 +17,28 @@ public class AccountDao {
     private final JdbcTemplate jdbcTemplate;
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
+    public void makeTransactionRoll(String fromAcc, String toAcc, Double amount) {
+        String sqlFrom = "UPDATE accounts \n" +
+                "SET balance = balance + :amount \n" +
+                "WHERE uniq_number = :fromAcc \n;";
+
+        String sqlTo = "update accounts " +
+                "set balance = balance - :amount " +
+                "where uniq_number = :toAcc \n;";
+
+        namedParameterJdbcTemplate.update(sqlFrom,
+                new MapSqlParameterSource()
+                        .addValue("fromAcc", fromAcc)
+                        .addValue("amount", amount)
+        );
+
+        namedParameterJdbcTemplate.update(sqlTo,
+                new MapSqlParameterSource()
+                        .addValue("toAcc", toAcc)
+                        .addValue("amount", amount)
+        );
+    }
+
     public void makeTransaction(String fromAcc, String toAcc, Double amount) {
         String sqlFrom = "UPDATE accounts \n" +
                 "SET balance = balance - :amount \n" +
@@ -93,8 +115,7 @@ public class AccountDao {
     }
 
     public Optional<Double> getBalanceByNum(String accNum) {
-        String sql = "SELECT balance FROM accounts WHERE uniq_number = :accNum";
-        Map<String, Object> params = Collections.singletonMap("accNum", accNum);
+        String sql = "SELECT balance FROM accounts WHERE uniq_number = ?";
 
         Double balance = jdbcTemplate.queryForObject(sql, Double.class, accNum);
         return Optional.ofNullable(balance);
