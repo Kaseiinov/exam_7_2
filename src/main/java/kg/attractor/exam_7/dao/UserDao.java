@@ -1,11 +1,14 @@
 package kg.attractor.exam_7.dao;
 
+import kg.attractor.exam_7.mapper.UserMapper;
 import kg.attractor.exam_7.model.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Component;
+
+import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor
@@ -25,5 +28,10 @@ public class UserDao {
                         .addValue("roleId", user.getRoleId())
                         .addValue("enabled", user.getEnabled())
         );
+    }
+
+    public Optional<User> findById(long id) {
+        String sql = "select * from users where id = ?";
+        return Optional.ofNullable(jdbcTemplate.queryForObject(sql, new UserMapper(), id));
     }
 }

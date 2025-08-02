@@ -3,6 +3,7 @@ package kg.attractor.exam_7.service.impl;
 import kg.attractor.exam_7.dao.UserDao;
 import kg.attractor.exam_7.dto.UserDto;
 import kg.attractor.exam_7.model.User;
+import kg.attractor.exam_7.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
 public class UserServiceImpl  implements UserService {
     private final UserDao userDao;
 
+    @Override
     public void register(UserDto userDto){
         User user = User
                 .builder()
