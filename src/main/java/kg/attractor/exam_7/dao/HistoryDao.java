@@ -17,8 +17,23 @@ public class HistoryDao {
     private final JdbcTemplate jdbcTemplate;
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
+    public Optional<History> getHistoryById(Long id){
+        String sql = "select * from history where id = ?";
+        return Optional.ofNullable(jdbcTemplate.queryForObject(sql, new HistoryMapper(), id));
+    }
+
+    public void approveTransaction(Long id ) {
+        String sql = "update history set approved = true where id = ?";
+        jdbcTemplate.update(sql, id);
+    }
+
     public List<History> getTransactionHistory() {
         String sql = "select * from history";
+        return jdbcTemplate.query(sql, new HistoryMapper());
+    }
+
+    public List<History> getTransactionHistoryApproval() {
+        String sql = "select * from history where APPROVED = false";
         return jdbcTemplate.query(sql, new HistoryMapper());
     }
 

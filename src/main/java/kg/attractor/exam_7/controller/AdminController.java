@@ -4,9 +4,7 @@ import kg.attractor.exam_7.dto.HistoryDto;
 import kg.attractor.exam_7.dto.TransactionDto;
 import kg.attractor.exam_7.service.TransactionService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -16,8 +14,18 @@ import java.util.List;
 public class AdminController {
     private final TransactionService transactionService;
 
+    @PostMapping("transactions/approval")
+    public void approveTransactionById(@RequestParam Long id) {
+        transactionService.approveTransaction(id);
+    }
+
     @GetMapping("transactions")
     public List<HistoryDto> getTransactions() {
         return transactionService.getTransactionHistory();
+    }
+
+    @GetMapping("transactions/approval")
+    public List<HistoryDto> getTransactionsApproval() {
+        return transactionService.getTransactionHistoryApproval();
     }
 }

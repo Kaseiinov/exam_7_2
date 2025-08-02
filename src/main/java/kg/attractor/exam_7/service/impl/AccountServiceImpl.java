@@ -30,10 +30,15 @@ public class AccountServiceImpl implements AccountService {
     private final HistoryDao historyDao;
 
     @Override
-    public void makeTransaction(TransactionDto transactionDto) throws InvalidCurrencyException, NotEnoughFundsOnAccountException {
+    public void makeTransaction(TransactionDto transactionDto, Authentication auth) throws InvalidCurrencyException, NotEnoughFundsOnAccountException {
         Account fromAcc = accountDao.getAccountByNum(transactionDto.getFromAcc()).orElseThrow(NotFoundException::new);
+        User user = userDao.findByPhone(auth.getName()).orElseThrow(NotFoundException::new);
         Account toAcc = accountDao.getAccountByNum(transactionDto.getToAcc()).orElseThrow(NotFoundException::new);
         boolean isEnough = accountDao.isEnough(fromAcc.getUniqNumber(), transactionDto.getAmount());
+        if(!user.getId().equals(fromAcc.getUserId())){
+            throw new UserNotFoundException();
+        }
+
         if(!fromAcc.getCurrencyId().equals(toAcc.getCurrencyId())) {
             throw new InvalidCurrencyException();
         }

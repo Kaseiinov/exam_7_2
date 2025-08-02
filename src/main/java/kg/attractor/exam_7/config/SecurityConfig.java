@@ -48,6 +48,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(HttpMethod.POST, "/api/accounts/balance").authenticated()
                         .requestMatchers(HttpMethod.POST, "/api/accounts/transactions").authenticated()
+                        .requestMatchers(HttpMethod.POST, "/api/transactions").authenticated()
+                        .requestMatchers("/api/admin/**").hasAuthority("admin")
                         .anyRequest().permitAll()
                 );
         return http.build();

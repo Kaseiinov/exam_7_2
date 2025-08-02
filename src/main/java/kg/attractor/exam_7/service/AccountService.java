@@ -13,7 +13,7 @@ import java.rmi.NotBoundException;
 import java.util.List;
 
 public interface AccountService {
-    void makeTransaction(TransactionDto transactionDto) throws InvalidCurrencyException, NotEnoughFundsOnAccountException;
+    void makeTransaction(TransactionDto transactionDto, Authentication auth) throws InvalidCurrencyException, NotEnoughFundsOnAccountException;
 
     List<AccountDto> getAccounts();
 
