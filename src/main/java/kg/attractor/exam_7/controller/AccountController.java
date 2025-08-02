@@ -1,6 +1,7 @@
 package kg.attractor.exam_7.controller;
 
 import jakarta.validation.Valid;
+import kg.attractor.exam_7.dto.AccountDto;
 import kg.attractor.exam_7.dto.CreateAccDto;
 import kg.attractor.exam_7.dto.TopUpDto;
 import kg.attractor.exam_7.exceptions.WrongUserException;
@@ -12,12 +13,18 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.rmi.NotBoundException;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/accounts")
 @RequiredArgsConstructor
 public class AccountController {
     private final AccountService accountService;
+
+    @GetMapping
+    public ResponseEntity<List<AccountDto>> getAccounts() {
+        return ResponseEntity.ok(accountService.getAccounts());
+    }
 
     @PostMapping("/balance")
     public HttpStatus topUpBalance(Authentication authentication, @RequestBody @Valid TopUpDto topUp) throws WrongUserException {

@@ -3,6 +3,7 @@ package kg.attractor.exam_7.service.impl;
 import kg.attractor.exam_7.dao.AccountDao;
 import kg.attractor.exam_7.dao.CurrencyDao;
 import kg.attractor.exam_7.dao.UserDao;
+import kg.attractor.exam_7.dto.AccountDto;
 import kg.attractor.exam_7.dto.CreateAccDto;
 import kg.attractor.exam_7.dto.TopUpDto;
 import kg.attractor.exam_7.exceptions.CurrencyNotFoundException;
@@ -18,6 +19,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import java.rmi.NotBoundException;
+import java.util.List;
 import java.util.UUID;
 
 @Slf4j
@@ -27,6 +29,23 @@ public class AccountServiceImpl implements AccountService {
     private final AccountDao accountDao;
     private final UserDao userDao;
     private final CurrencyDao currencyDao;
+
+    @Override
+    public List<AccountDto> getAccounts(){
+        List<Account> accounts = accountDao.getAccounts();
+
+        return accounts
+                .stream()
+                .map(a -> AccountDto
+                        .builder()
+                        .id(a.getId())
+                        .currency(currencyDao.getCurrencyNameById(a.getCurrencyId()))
+                        .username(userDao.getUsernameById(a.getUserId()))
+                        .balance(a.getBalance())
+                        .uniqNumber(a.getUniqNumber())
+                        .build()
+                ).toList();
+    }
 
     @Override
     public void toUp(Authentication authentication, TopUpDto topUp) throws WrongUserException {

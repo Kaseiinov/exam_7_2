@@ -1,5 +1,6 @@
 package kg.attractor.exam_7.dao;
 
+import kg.attractor.exam_7.mapper.AccountMapper;
 import kg.attractor.exam_7.model.Account;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -7,16 +8,18 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Component;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Component
 @RequiredArgsConstructor
 public class AccountDao {
     private final JdbcTemplate jdbcTemplate;
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+
+    public List<Account> getAccounts() {
+        String sql = "select * from accounts";
+        return jdbcTemplate.query(sql, new AccountMapper());
+    }
 
     public boolean isAccountOwnedByUser(String accountNumber, String userPhone) {
         String sql = """

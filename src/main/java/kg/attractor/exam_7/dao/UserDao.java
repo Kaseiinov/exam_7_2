@@ -16,6 +16,11 @@ public class UserDao {
     private final JdbcTemplate jdbcTemplate;
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
+    public String getUsernameById(Long id) {
+        String sql = "select username from users where id = ?;";
+        return jdbcTemplate.queryForObject(sql, String.class, id);
+    }
+
     public Optional<User> findByPhone(String phone) {
         String sql = "select * from users where phone = ?";
         return Optional.ofNullable(jdbcTemplate.queryForObject(sql, new UserMapper(), phone));

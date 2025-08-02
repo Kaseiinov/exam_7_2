@@ -15,6 +15,11 @@ public class CurrencyDao {
     private final JdbcTemplate jdbcTemplate;
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
+    public String getCurrencyNameById(Long id) {
+        String sql = "select currency from currencies where id = ?;";
+        return jdbcTemplate.queryForObject(sql, String.class, id);
+    }
+
     public Optional<Currency> findById(String currency) {
         String sql = "select * from currencies where lower(currency) = lower(?)";
         return Optional.ofNullable(jdbcTemplate.queryForObject(sql, new CurrencyMapper(), currency));
