@@ -2,11 +2,13 @@ package kg.attractor.exam_7.service.impl;
 
 import kg.attractor.exam_7.dao.AccountDao;
 import kg.attractor.exam_7.dao.CurrencyDao;
+import kg.attractor.exam_7.dao.HistoryDao;
 import kg.attractor.exam_7.dao.UserDao;
 import kg.attractor.exam_7.dto.*;
 import kg.attractor.exam_7.exceptions.*;
 import kg.attractor.exam_7.model.Account;
 import kg.attractor.exam_7.model.Currency;
+import kg.attractor.exam_7.model.History;
 import kg.attractor.exam_7.model.User;
 import kg.attractor.exam_7.service.AccountService;
 import lombok.RequiredArgsConstructor;
@@ -25,21 +27,38 @@ public class AccountServiceImpl implements AccountService {
     private final AccountDao accountDao;
     private final UserDao userDao;
     private final CurrencyDao currencyDao;
+    private final HistoryDao historyDao;
 
     @Override
     public void makeTransaction(TransactionDto transactionDto) throws InvalidCurrencyException, NotEnoughFundsOnAccountException {
         Account fromAcc = accountDao.getAccountByNum(transactionDto.getFromAcc()).orElseThrow(NotFoundException::new);
         Account toAcc = accountDao.getAccountByNum(transactionDto.getToAcc()).orElseThrow(NotFoundException::new);
         boolean isEnough = accountDao.isEnough(fromAcc.getUniqNumber(), transactionDto.getAmount());
-        if(fromAcc.getCurrencyId().equals(toAcc.getCurrencyId())) {
-            if(isEnough) {
-                accountDao.makeTransaction(fromAcc.getUniqNumber(), toAcc.getUniqNumber(), transactionDto.getAmount());
-            }else {
-                throw new NotEnoughFundsOnAccountException();
-            }
-        }else {
+        if(!fromAcc.getCurrencyId().equals(toAcc.getCurrencyId())) {
             throw new InvalidCurrencyException();
         }
+
+        if(!isEnough) {
+            throw new NotEnoughFundsOnAccountException();
+        }
+
+        if(transactionDto.getAmount() > 10){
+            History history = new History();
+            history.setAmountMoney(transactionDto.getAmount());
+            history.setFromAcc(fromAcc.getUniqNumber());
+            history.setToAcc(toAcc.getUniqNumber());
+            history.setApproved(false);
+            historyDao.save(history);
+        } else {
+            History history = new History();
+            history.setAmountMoney(transactionDto.getAmount());
+            history.setFromAcc(fromAcc.getUniqNumber());
+            history.setToAcc(toAcc.getUniqNumber());
+            history.setApproved(true);
+            historyDao.save(history);
+            accountDao.makeTransaction(fromAcc.getUniqNumber(), toAcc.getUniqNumber(), transactionDto.getAmount());
+        }
+
     }
 
     @Override
