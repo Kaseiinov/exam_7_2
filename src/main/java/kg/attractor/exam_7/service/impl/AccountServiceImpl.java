@@ -3,16 +3,10 @@ package kg.attractor.exam_7.service.impl;
 import kg.attractor.exam_7.dao.AccountDao;
 import kg.attractor.exam_7.dao.CurrencyDao;
 import kg.attractor.exam_7.dao.UserDao;
-import kg.attractor.exam_7.dto.AccountDto;
-import kg.attractor.exam_7.dto.CreateAccDto;
-import kg.attractor.exam_7.dto.HistoryDto;
-import kg.attractor.exam_7.dto.TopUpDto;
-import kg.attractor.exam_7.exceptions.CurrencyNotFoundException;
-import kg.attractor.exam_7.exceptions.UserNotFoundException;
-import kg.attractor.exam_7.exceptions.WrongUserException;
+import kg.attractor.exam_7.dto.*;
+import kg.attractor.exam_7.exceptions.*;
 import kg.attractor.exam_7.model.Account;
 import kg.attractor.exam_7.model.Currency;
-import kg.attractor.exam_7.model.History;
 import kg.attractor.exam_7.model.User;
 import kg.attractor.exam_7.service.AccountService;
 import lombok.RequiredArgsConstructor;
@@ -32,7 +26,21 @@ public class AccountServiceImpl implements AccountService {
     private final UserDao userDao;
     private final CurrencyDao currencyDao;
 
-
+    @Override
+    public void makeTransaction(TransactionDto transactionDto) throws InvalidCurrencyException, NotEnoughFundsOnAccountException {
+        Account fromAcc = accountDao.getAccountByNum(transactionDto.getFromAcc()).orElseThrow(NotFoundException::new);
+        Account toAcc = accountDao.getAccountByNum(transactionDto.getToAcc()).orElseThrow(NotFoundException::new);
+        boolean isEnough = accountDao.isEnough(fromAcc.getUniqNumber(), transactionDto.getAmount());
+        if(fromAcc.getCurrencyId().equals(toAcc.getCurrencyId())) {
+            if(isEnough) {
+                accountDao.makeTransaction(fromAcc.getUniqNumber(), toAcc.getUniqNumber(), transactionDto.getAmount());
+            }else {
+                throw new NotEnoughFundsOnAccountException();
+            }
+        }else {
+            throw new InvalidCurrencyException();
+        }
+    }
 
     @Override
     public List<AccountDto> getAccounts(){

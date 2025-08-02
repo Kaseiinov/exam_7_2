@@ -47,6 +47,7 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(HttpMethod.POST, "/api/accounts/balance").authenticated()
+                        .requestMatchers(HttpMethod.POST, "/api/accounts/transactions").authenticated()
                         .anyRequest().permitAll()
                 );
         return http.build();
